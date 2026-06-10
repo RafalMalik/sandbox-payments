@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sandbox Payment</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <main class="card">
+    <header>
+      <p class="badge">Sandbox Payment</p>
+      <h1>{{ .Amount }}</h1>
+      {{ if .Payment.Description }}
+      <p class="description">{{ .Payment.Description }}</p>
+      {{ end }}
+      <p class="meta">Payment ID: {{ .Payment.ID }}</p>
+    </header>
+
+    {{ if eq .Payment.Status "pending" }}
+      {{ if .Payment.PaymentMethod }}
+        <section class="method-selected">
+          <h2>Selected method</h2>
+          <div class="method">
+            {{ range .Methods }}
+              {{ if eq .Slug $.Payment.PaymentMethod }}
+                <img src="{{ .Logo }}" alt="{{ .Name }}" width="32" height="32">
+                <span>{{ .Name }}</span>
+              {{ end }}
+            {{ end }}
+          </div>
+
+          <div class="actions">
+            <form method="post" action="/pay/{{ .Payment.ID }}/approve">
+              <button type="submit" class="btn success">Approve payment</button>
+            </form>
+            <form method="post" action="/pay/{{ .Payment.ID }}/fail">
+              <button type="submit" class="btn danger">Simulate failure</button>
+            </form>
+            <form method="post" action="/pay/{{ .Payment.ID }}/cancel">
+              <button type="submit" class="btn muted">Cancel</button>
+            </form>
+          </div>
+        </section>
+      {{ else }}
+        <section>
+          <h2>Choose payment method</h2>
+          <form method="post" action="/pay/{{ .Payment.ID }}/select" class="methods">
+            {{ range .Methods }}
+            <label class="method-option">
+              <input type="radio" name="payment_method" value="{{ .Slug }}" required>
+              <img src="{{ .Logo }}" alt="{{ .Name }}" width="28" height="28">
+              <span>{{ .Name }}</span>
+            </label>
+            {{ end }}
+            <button type="submit" class="btn primary">Continue</button>
+          </form>
+        </section>
+      {{ end }}
+    {{ else }}
+      <section class="terminal">
+        <p>Payment is <strong>{{ .Payment.Status }}</strong>.</p>
+      </section>
+    {{ end }}
+  </main>
+</body>
+</html>

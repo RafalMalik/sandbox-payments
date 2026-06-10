@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sandbox Payments</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="doc-body">
+  <main class="doc">
+    <header class="doc-header">
+      <p class="badge">Sandbox Payments · v{{ .Version }}</p>
+      <h1>Payment gateway sandbox</h1>
+      <p class="lead">
+        Minimal Stripe/PayU-like sandbox for integration testing.
+        Base URL: <code>{{ .BaseURL }}</code>
+      </p>
+    </header>
+
+    <nav class="doc-nav">
+      <a href="#about">About</a>
+      <a href="#flow">Payment flow</a>
+      <a href="#statuses">Statuses</a>
+      <a href="#itn">ITN</a>
+      <a href="#webhooks">Webhooks</a>
+      <a href="#links">Links</a>
+    </nav>
+
+    <section id="about">
+      <h2>About</h2>
+      <p>
+        Sandbox Payments simulates an external payment gateway. A merchant creates a payment via API,
+        redirects the payer to a hosted page (<code>/pay/:id</code>), and after user action
+        the payer is redirected back with optional HTTP notifications.
+      </p>
+      <ul>
+        <li>Stack: Go + SQLite + stdlib HTTP</li>
+        <li>Amounts in minor units (e.g. <code>1999</code> = 19.99 PLN)</li>
+        <li>Methods: <code>card</code>, <code>blik</code>, <code>google_pay</code>, <code>bank_transfer</code></li>
+      </ul>
+    </section>
+
+    <section id="flow">
+      <h2>Payment flow</h2>
+      <ol>
+        <li><code>GET /api/payment-methods</code> — list available methods (optional)</li>
+        <li><code>POST /api/payments</code> — create payment, receive <code>redirect_url</code></li>
+        <li>Redirect payer to <code>/pay/:id</code></li>
+        <li>Payer selects method (if needed) and clicks Approve / Fail / Cancel</li>
+        <li>Redirect to <code>success_url</code>, <code>failed_url</code> or <code>cancel_url</code> with <code>payment_id</code> and <code>status</code></li>
+        <li>Optionally: ITN (<code>itn_url</code>) and webhook (<code>webhook_url</code>)</li>
+      </ol>
+    </section>
+
+    <section id="statuses">
+      <h2>Payment statuses</h2>
+      <table>
+        <thead>
+          <tr><th>Status</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>pending</code></td><td>Payment created, waiting for action on hosted page</td></tr>
+          <tr><td><code>processing</code></td><td>Gateway released the payer — no final confirmation yet (ITN flow)</td></tr>
+          <tr><td><code>succeeded</code></td><td>Payment completed successfully</td></tr>
+          <tr><td><code>failed</code></td><td>Payment declined</td></tr>
+          <tr><td><code>cancelled</code></td><td>Payment cancelled by payer</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="itn">
+      <h2>ITN — Instant Transaction Notification</h2>
+      <p>
+        Optional <code>itn_url</code> simulates a scenario where the gateway releases the payer
+        (redirect to <code>success_url</code> with <code>status=processing</code>) before final confirmation.
+      </p>
+      <ol>
+        <li>Payer clicks <strong>Approve</strong> on hosted page</li>
+        <li>Immediate redirect: <code>success_url?payment_id=...&amp;status=processing</code></li>
+        <li>After <code>itn_delay_seconds</code> (default 0) — POST to <code>itn_url</code></li>
+        <li>After successful ITN — status becomes <code>succeeded</code> and webhook is sent (if configured)</li>
+      </ol>
+      <pre>{
+  "event": "payment.processing",
+  "payment_id": "pay_abc123",
+  "amount": 1999,
+  "currency": "PLN",
+  "status": "processing"
+}</pre>
+    </section>
+
+    <section id="webhooks">
+      <h2>Webhooks</h2>
+      <p>
+        Optional <code>webhook_url</code> receives a POST when a final status is reached
+        (<code>succeeded</code>, <code>failed</code>, <code>cancelled</code>).
+      </p>
+      <pre>{
+  "event": "payment.succeeded",
+  "payment_id": "pay_abc123",
+  "amount": 1999,
+  "currency": "PLN"
+}</pre>
+      <p>Events: <code>payment.succeeded</code>, <code>payment.failed</code>, <code>payment.cancelled</code>. Retry: 3 attempts.</p>
+    </section>
+
+    <section id="links" class="home-actions">
+      <h2>Links</h2>
+      <div class="home-links">
+        <a class="btn primary home-link" href="/docs/api">API documentation</a>
+        <a class="btn muted home-link" href="/changelog">Changelog</a>
+      </div>
+    </section>
+
+    <footer class="doc-footer">
+      <p>Health: <code>/health</code> · OpenAPI: <a href="/openapi.yaml">openapi.yaml</a></p>
+    </footer>
+  </main>
+</body>
+</html>

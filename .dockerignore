@@ -1,0 +1,6 @@
+/data/
+*.db
+.git/
+.gitignore
+README.md
+sandbox-payments-spec.md

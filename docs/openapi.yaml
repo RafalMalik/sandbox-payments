@@ -1,0 +1,146 @@
+openapi: 3.0.3
+info:
+  title: Sandbox Payments API
+  description: Minimal sandbox payment gateway (Stripe/PayU-like flow).
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+paths:
+  /api/payment-methods:
+    get:
+      summary: List available payment methods
+      responses:
+        "200":
+          description: Payment methods
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PaymentMethod"
+  /api/payments:
+    post:
+      summary: Create a payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePaymentRequest"
+      responses:
+        "201":
+          description: Payment created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreatePaymentResponse"
+        "400":
+          description: Invalid request
+  /api/payments/{id}:
+    get:
+      summary: Get payment by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Payment details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payment"
+        "404":
+          description: Payment not found
+components:
+  schemas:
+    PaymentMethod:
+      type: object
+      properties:
+        slug:
+          type: string
+        name:
+          type: string
+        logo:
+          type: string
+    CreatePaymentRequest:
+      type: object
+      required:
+        - amount
+        - currency
+        - success_url
+        - cancel_url
+        - failed_url
+      properties:
+        amount:
+          type: integer
+          description: Amount in minor units (e.g. grosze)
+        currency:
+          type: string
+          example: PLN
+        description:
+          type: string
+        payment_method:
+          type: string
+          description: Optional preselected method slug
+        success_url:
+          type: string
+          format: uri
+        cancel_url:
+          type: string
+          format: uri
+        failed_url:
+          type: string
+          format: uri
+        webhook_url:
+          type: string
+          format: uri
+        itn_url:
+          type: string
+          format: uri
+          description: Instant Transaction Notification URL (gateway releases payer without final confirmation)
+        itn_delay_seconds:
+          type: integer
+          minimum: 0
+          maximum: 300
+          description: Delay before ITN POST is sent
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+    CreatePaymentResponse:
+      type: object
+      properties:
+        payment_id:
+          type: string
+        status:
+          type: string
+          enum: [pending, processing, succeeded, failed, cancelled]
+        redirect_url:
+          type: string
+          format: uri
+    Payment:
+      type: object
+      properties:
+        payment_id:
+          type: string
+        amount:
+          type: integer
+        currency:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+        payment_method:
+          type: string
+        metadata:
+          type: object
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time

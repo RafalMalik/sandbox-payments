@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sandbox Payments — API docs</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui.css">
+</head>
+<body class="doc-body">
+  <main class="doc api-docs">
+    <header class="doc-header">
+      <p class="badge">Sandbox Payments · v{{ .Version }}</p>
+      <h1>API documentation</h1>
+      <p class="lead">
+        Browse and try payment endpoints. OpenAPI spec:
+        <a href="/openapi.yaml">openapi.yaml</a> · <a href="/">Back to home</a>
+      </p>
+    </header>
+
+    <div id="swagger-ui"></div>
+  </main>
+
+  <script src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-bundle.js"></script>
+  <script>
+    SwaggerUIBundle({
+      url: "{{ .OpenAPISpecData }}",
+      dom_id: "#swagger-ui",
+      deepLinking: true,
+      presets: [SwaggerUIBundle.presets.apis, SwaggerUIBundle.SwaggerUIStandalonePreset],
+      layout: "BaseLayout"
+    });
+  </script>
+</body>
+</html>
