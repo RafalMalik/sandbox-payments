@@ -221,7 +221,7 @@ CHANGELOG.md          # release history (Keep a Changelog)
 
 ## Author
 
-**Roman Malik** — [github.com/rmalik](https://github.com/rmalik)
+**Rafał Malik** — [github.com/RafalMalik](https://github.com/RafalMalik/)
 
 ## License
 

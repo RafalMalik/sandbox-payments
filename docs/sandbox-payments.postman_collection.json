@@ -1,0 +1,197 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "Sandbox Payments API",
+    "description": "Local sandbox payment gateway — REST API collection with example payloads.\n\nDefault base URL: http://localhost:8080 (Docker Compose / `go run ./cmd/api`).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.1.0"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "payment_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["health"]
+        },
+        "description": "Returns service status and application version."
+      },
+      "response": []
+    },
+    {
+      "name": "List Payment Methods",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/payment-methods",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "payment-methods"]
+        },
+        "description": "Returns available payment methods (card, blik, google_pay, bank_transfer)."
+      },
+      "response": []
+    },
+    {
+      "name": "Create Payment (basic)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 201) {",
+              "    const body = pm.response.json();",
+              "    if (body.payment_id) {",
+              "        pm.collectionVariables.set('payment_id', body.payment_id);",
+              "    }",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"amount\": 1999,\n  \"currency\": \"PLN\",\n  \"description\": \"Test order #123\",\n  \"payment_method\": \"blik\",\n  \"success_url\": \"http://localhost:3000/success\",\n  \"cancel_url\": \"http://localhost:3000/cancel\",\n  \"failed_url\": \"http://localhost:3000/failed\",\n  \"metadata\": {\n    \"order_id\": \"123\",\n    \"customer_email\": \"buyer@example.com\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/payments",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "payments"]
+        },
+        "description": "Creates a payment with a preselected BLIK method. Saves `payment_id` to collection variables for the Get Payment request."
+      },
+      "response": []
+    },
+    {
+      "name": "Create Payment (webhook + ITN)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 201) {",
+              "    const body = pm.response.json();",
+              "    if (body.payment_id) {",
+              "        pm.collectionVariables.set('payment_id', body.payment_id);",
+              "    }",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"amount\": 4999,\n  \"currency\": \"PLN\",\n  \"description\": \"Order with webhook and ITN\",\n  \"payment_method\": \"card\",\n  \"success_url\": \"http://localhost:3000/success\",\n  \"cancel_url\": \"http://localhost:3000/cancel\",\n  \"failed_url\": \"http://localhost:3000/failed\",\n  \"webhook_url\": \"http://localhost:3000/webhooks/payments\",\n  \"itn_url\": \"http://localhost:3000/itn/payments\",\n  \"itn_delay_seconds\": 5,\n  \"metadata\": {\n    \"order_id\": \"456\",\n    \"source\": \"postman\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/payments",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "payments"]
+        },
+        "description": "Creates a payment with optional webhook and ITN callbacks. After approve on the hosted page, webhook is sent on final status; ITN is sent after a configurable delay."
+      },
+      "response": []
+    },
+    {
+      "name": "Create Payment (method selection on page)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 201) {",
+              "    const body = pm.response.json();",
+              "    if (body.payment_id) {",
+              "        pm.collectionVariables.set('payment_id', body.payment_id);",
+              "    }",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"amount\": 2500,\n  \"currency\": \"PLN\",\n  \"description\": \"Order without preselected method\",\n  \"success_url\": \"http://localhost:3000/success\",\n  \"cancel_url\": \"http://localhost:3000/cancel\",\n  \"failed_url\": \"http://localhost:3000/failed\",\n  \"metadata\": {\n    \"order_id\": \"789\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/payments",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "payments"]
+        },
+        "description": "Creates a payment without `payment_method` — the payer selects a method on the hosted page (`redirect_url`)."
+      },
+      "response": []
+    },
+    {
+      "name": "Get Payment",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/payments/{{payment_id}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "payments", "{{payment_id}}"]
+        },
+        "description": "Returns payment details by ID. Run a Create Payment request first — it sets the `payment_id` collection variable automatically."
+      },
+      "response": []
+    }
+  ]
+}
