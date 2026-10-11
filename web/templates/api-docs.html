@@ -1,25 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="raspberry-vision">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {{template "head-assets"}}
   <title>Sandbox Payments — API docs</title>
-  <link rel="stylesheet" href="/static/style.css">
   <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui.css">
 </head>
-<body class="doc-body">
-  <main class="doc api-docs">
-    <header class="doc-header">
-      <p class="badge">Sandbox Payments · v{{ .Version }}</p>
-      <h1>API documentation</h1>
-      <p class="lead">
-        Browse and try payment endpoints. OpenAPI spec:
-        <a href="/openapi.yaml">openapi.yaml</a> · <a href="/">Back to home</a>
-      </p>
-    </header>
+<body>
+  <div class="rv-public">
+    {{template "site-header" .}}
+    <main class="rv-public__main rv-container sp-doc sp-doc--wide">
+      <header class="sp-doc__header">
+        <p class="rv-badge rv-badge--info">Sandbox Payments · v{{ .Version }}</p>
+        <h1>API documentation</h1>
+        <p class="lead">
+          Browse and try payment endpoints. OpenAPI spec:
+          <a href="/openapi.yaml">openapi.yaml</a> · <a href="/">Back to home</a>
+        </p>
+      </header>
 
-    <div id="swagger-ui"></div>
-  </main>
+      <div id="swagger-ui"></div>
+    </main>
+    {{template "site-footer" .}}
+  </div>
 
   <script src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-bundle.js"></script>
   <script>

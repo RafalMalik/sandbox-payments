@@ -100,6 +100,7 @@ type payPageData struct {
 	Payment *payment.Payment
 	Methods []payment.Method
 	Amount  string
+	Version string
 }
 
 func (h *Handler) paymentPage(w http.ResponseWriter, r *http.Request) {
@@ -113,6 +114,7 @@ func (h *Handler) paymentPage(w http.ResponseWriter, r *http.Request) {
 		Payment: p,
 		Methods: h.payments.ListMethods(),
 		Amount:  formatAmount(p.Amount, p.Currency),
+		Version: version.Version,
 	}
 
 	if err := h.tmpl.ExecuteTemplate(w, "pay.html", data); err != nil {

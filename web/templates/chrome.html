@@ -1,0 +1,33 @@
+{{define "head-assets"}}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="/static/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/rv/base.css">
+<link rel="stylesheet" href="/static/rv/components.css">
+<link rel="stylesheet" href="/static/rv/raspberry-vision.css">
+<link rel="stylesheet" href="/static/style.css">
+{{end}}
+
+{{define "site-header"}}
+<header class="rv-public__nav">
+  <a class="rv-brand" href="/">
+    <img class="rv-brand__logo" src="/static/logo.svg" width="40" height="40" alt="">
+    <strong>Sandbox Payments</strong>
+  </a>
+</header>
+{{end}}
+
+{{define "site-footer"}}
+<footer class="rv-public__footer sp-footer">
+  <iframe
+    class="rv-credit-embed"
+    src="https://raspberry-vision.cloud/embed/footer-light.html?version={{.Version}}"
+    title="Developed by Raspberry Vision"
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade"
+  ></iframe>
+</footer>
+{{end}}
