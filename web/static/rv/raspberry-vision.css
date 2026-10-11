@@ -1,0 +1,42 @@
+[data-theme="raspberry-vision"] {
+  color-scheme: light;
+  --rv-font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --rv-font-display: "Inter", system-ui, sans-serif;
+
+  --rv-color-primary: #c2185b;
+  --rv-color-primary-hover: #a0144c;
+  --rv-color-primary-active: #861040;
+  --rv-color-primary-soft: #fce4ec;
+  --rv-color-primary-contrast: #ffffff;
+  --rv-color-accent: #7c3aed;
+  --rv-color-accent-soft: #ede9fe;
+  --rv-color-danger: #c62828;
+  --rv-color-danger-soft: #ffebee;
+  --rv-color-warning: #d97706;
+  --rv-color-warning-soft: #ffedd5;
+  --rv-color-success: #0f766e;
+  --rv-color-success-soft: #ccfbf1;
+  --rv-color-info: #0369a1;
+  --rv-color-info-soft: #e0f2fe;
+
+  --rv-color-bg: #faf7f9;
+  --rv-color-surface: #ffffff;
+  --rv-color-surface-muted: #f6f0f3;
+  --rv-color-surface-hover: #efe6eb;
+  --rv-color-border: #e4d4db;
+  --rv-color-border-strong: #c9aeb8;
+  --rv-color-text: #1a1218;
+  --rv-color-text-muted: #6b5a63;
+  --rv-color-text-subtle: #97848e;
+  --rv-color-on-dark: #fdf8fa;
+  --rv-color-focus: #7c3aed;
+  --rv-focus-ring: 0 0 0 3px rgba(194, 24, 91, 0.28);
+
+  --rv-sidebar-bg: #1a1224;
+  --rv-sidebar-bg-gradient: linear-gradient(180deg, #2a1838 0%, #140c1c 100%);
+  --rv-sidebar-text: #c4b5d6;
+  --rv-sidebar-text-active: #ffffff;
+  --rv-sidebar-active: rgba(194, 24, 91, 0.4);
+  --rv-sidebar-active-border: rgba(124, 58, 237, 0.7);
+  --rv-sidebar-section: rgba(196, 181, 214, 0.55);
+}

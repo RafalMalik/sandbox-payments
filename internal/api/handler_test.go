@@ -178,6 +178,28 @@ func TestGetPayment_notFound(t *testing.T) {
 	}
 }
 
+func TestHomePage_rvChrome(t *testing.T) {
+	t.Parallel()
+
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+	rec := httptest.NewRecorder()
+	newTestHandler(t).ServeHTTP(rec, req)
+	if rec.Code != http.StatusOK {
+		t.Fatalf("status = %d, want 200", rec.Code)
+	}
+	body := rec.Body.String()
+	for _, want := range []string{
+		`data-theme="raspberry-vision"`,
+		`/static/logo.svg`,
+		`raspberry-vision.cloud/embed/footer-light.html?version=` + version.Version,
+		"Sandbox Payments",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("home page missing %q", want)
+		}
+	}
+}
+
 func TestPaymentPage_andApproveRedirect(t *testing.T) {
 	t.Parallel()
 
@@ -206,8 +228,12 @@ func TestPaymentPage_andApproveRedirect(t *testing.T) {
 	if pageRec.Code != http.StatusOK {
 		t.Fatalf("page status = %d", pageRec.Code)
 	}
-	if !strings.Contains(pageRec.Body.String(), "PLN 25.00") {
+	pageBody := pageRec.Body.String()
+	if !strings.Contains(pageBody, "PLN 25.00") {
 		t.Fatal("expected formatted amount on payment page")
+	}
+	if !strings.Contains(pageBody, `data-theme="raspberry-vision"`) || !strings.Contains(pageBody, "/static/logo.svg") {
+		t.Fatal("expected Raspberry Vision chrome on payment page")
 	}
 
 	approveReq := httptest.NewRequest(http.MethodPost, "/pay/"+paymentID+"/approve", nil)

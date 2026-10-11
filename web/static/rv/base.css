@@ -1,0 +1,142 @@
+/* Raspberry Vision design tokens — semantic values only.
+   Brand colors live in themes/*.css via [data-theme]. */
+
+:root {
+  color-scheme: light;
+
+  --rv-font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --rv-font-display: var(--rv-font-sans);
+  --rv-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --rv-font-size-xs: 0.75rem;
+  --rv-font-size-sm: 0.8125rem;
+  --rv-font-size-md: 0.9375rem;
+  --rv-font-size-lg: 1.125rem;
+  --rv-font-size-xl: 1.5rem;
+  --rv-font-size-2xl: 2rem;
+  --rv-line-height-base: 1.5;
+  --rv-line-height-tight: 1.25;
+
+  --rv-space-1: 0.25rem;
+  --rv-space-2: 0.5rem;
+  --rv-space-3: 0.75rem;
+  --rv-space-4: 1rem;
+  --rv-space-5: 1.25rem;
+  --rv-space-6: 1.5rem;
+  --rv-space-8: 2rem;
+  --rv-space-10: 2.5rem;
+  --rv-space-12: 3rem;
+
+  --rv-radius-sm: 0.25rem;
+  --rv-radius-md: 0.5rem;
+  --rv-radius-lg: 0.75rem;
+  --rv-radius-xl: 1rem;
+  --rv-radius-pill: 9999px;
+
+  --rv-shadow-sm: 0 1px 2px rgb(0 0 0 / 8%);
+  --rv-shadow-md: 0 8px 24px rgb(0 0 0 / 12%);
+  --rv-shadow-lg: 0 18px 48px rgb(0 0 0 / 14%);
+
+  --rv-control-height-sm: 2rem;
+  --rv-control-height-md: 2.5rem;
+  --rv-control-height-lg: 3rem;
+
+  --rv-breakpoint-sm: 40rem;
+  --rv-breakpoint-md: 48rem;
+  --rv-breakpoint-lg: 64rem;
+  --rv-breakpoint-xl: 80rem;
+
+  --rv-sidebar-width: 15.75rem;
+  --rv-z-drawer: 40;
+  --rv-z-modal: 50;
+  --rv-z-toast: 60;
+
+  /* Fallbacks until a theme stylesheet loads */
+  --rv-color-bg: #ffffff;
+  --rv-color-surface: #ffffff;
+  --rv-color-surface-muted: #f4f5f7;
+  --rv-color-surface-hover: #eef0f3;
+  --rv-color-border: #d8dde5;
+  --rv-color-border-strong: #b8c0cc;
+  --rv-color-text: #171a1f;
+  --rv-color-text-muted: #5c6675;
+  --rv-color-text-subtle: #8a93a3;
+  --rv-color-primary: #c2185b;
+  --rv-color-primary-hover: #a0144c;
+  --rv-color-primary-active: #861040;
+  --rv-color-primary-soft: #fce4ec;
+  --rv-color-primary-contrast: #ffffff;
+  --rv-color-accent: #7c3aed;
+  --rv-color-accent-soft: #ede9fe;
+  --rv-color-danger: #c62828;
+  --rv-color-danger-soft: #ffebee;
+  --rv-color-warning: #d97706;
+  --rv-color-warning-soft: #ffedd5;
+  --rv-color-success: #0f766e;
+  --rv-color-success-soft: #ccfbf1;
+  --rv-color-info: #0369a1;
+  --rv-color-info-soft: #e0f2fe;
+  --rv-color-on-dark: #f8fafc;
+  --rv-color-focus: #7c3aed;
+  --rv-focus-ring: 0 0 0 3px color-mix(in srgb, var(--rv-color-primary) 35%, transparent);
+
+  --rv-sidebar-bg: #1a1224;
+  --rv-sidebar-bg-gradient: linear-gradient(180deg, #2a1838 0%, #140c1c 100%);
+  --rv-sidebar-text: #c4b5d6;
+  --rv-sidebar-text-active: #ffffff;
+  --rv-sidebar-active: color-mix(in srgb, var(--rv-color-primary) 40%, transparent);
+  --rv-sidebar-active-border: color-mix(in srgb, var(--rv-color-accent) 70%, transparent);
+  --rv-sidebar-border: rgb(255 255 255 / 8%);
+  --rv-sidebar-section: rgb(196 181 214 / 55%);
+}
+
+[hidden] {
+  display: none !important;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--rv-font-sans);
+  font-size: var(--rv-font-size-md);
+  line-height: var(--rv-line-height-base);
+  color: var(--rv-color-text);
+  background: var(--rv-color-surface-muted);
+}
+
+.rv-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.rv-skip-link {
+  position: absolute;
+  left: var(--rv-space-4);
+  top: -100%;
+  z-index: 100;
+  padding: var(--rv-space-2) var(--rv-space-4);
+  background: var(--rv-color-primary);
+  color: var(--rv-color-primary-contrast);
+  border-radius: var(--rv-radius-md);
+  text-decoration: none;
+}
+
+.rv-skip-link:focus {
+  top: var(--rv-space-4);
+}
+
+.rv-muted {
+  color: var(--rv-color-text-muted);
+}
