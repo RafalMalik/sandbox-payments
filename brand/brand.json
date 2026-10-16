@@ -1,0 +1,13 @@
+{
+  "name": "Sandbox Payments",
+  "colors": {
+    "primary": "#d4125c",
+    "ink": "#17233a",
+    "accent": "#18d7f2"
+  },
+  "logo_variants": [
+    "logo.svg",
+    "logo-mark.svg",
+    "logo-dark.svg"
+  ]
+}

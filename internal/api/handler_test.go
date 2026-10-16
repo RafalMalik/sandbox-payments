@@ -191,12 +191,27 @@ func TestHomePage_rvChrome(t *testing.T) {
 	for _, want := range []string{
 		`data-theme="raspberry-vision"`,
 		`/static/logo.svg`,
+		`/favicon.svg`,
+		`property="og:title"`,
+		`plausible.io/js/script.js`,
 		`raspberry-vision.cloud/embed/footer-light.html?version=` + version.Version,
 		"Sandbox Payments",
 	} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("home page missing %q", want)
 		}
+	}
+
+	robots := httptest.NewRecorder()
+	handler := newTestHandler(t)
+	handler.ServeHTTP(robots, httptest.NewRequest(http.MethodGet, "/robots.txt", nil))
+	if robots.Code != http.StatusOK || !strings.Contains(robots.Body.String(), "Sitemap:") {
+		t.Fatalf("robots %d %s", robots.Code, robots.Body.String())
+	}
+	icon := httptest.NewRecorder()
+	handler.ServeHTTP(icon, httptest.NewRequest(http.MethodGet, "/favicon.svg", nil))
+	if icon.Code != http.StatusOK || !strings.Contains(icon.Header().Get("Content-Type"), "image/svg+xml") {
+		t.Fatalf("favicon %d %s", icon.Code, icon.Header().Get("Content-Type"))
 	}
 }
 

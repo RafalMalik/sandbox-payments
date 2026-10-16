@@ -3,3 +3,9 @@ services:
   api:
     ports: !override
       - "127.0.0.1:${PORT}:${PORT}"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:$${PORT}/health || exit 1"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
