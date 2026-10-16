@@ -3,6 +3,7 @@ package api
 import (
 	"log/slog"
 	"net/http"
+	"path/filepath"
 	"time"
 )
 
@@ -36,6 +37,9 @@ func recoverMiddleware(log *slog.Logger, next http.Handler) http.Handler {
 func NewServer(handler *Handler, staticDir string, log *slog.Logger) http.Handler {
 	mux := http.NewServeMux()
 	handler.RegisterRoutes(mux)
+	mux.HandleFunc("GET /favicon.svg", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, filepath.Join(staticDir, "logo.svg"))
+	})
 	mux.Handle("/logos/", http.StripPrefix("/logos/", http.FileServer(http.Dir(staticDir+"/logos"))))
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir(staticDir))))
 
