@@ -1,0 +1,5 @@
+# Apps VPS: publish the API on localhost only. Apache is the public edge.
+services:
+  api:
+    ports: !override
+      - "127.0.0.1:${PORT}:${PORT}"
