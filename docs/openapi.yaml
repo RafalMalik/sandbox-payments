@@ -2,10 +2,29 @@ openapi: 3.0.3
 info:
   title: Sandbox Payments API
   description: Minimal sandbox payment gateway (Stripe/PayU-like flow).
-  version: 1.1.0
+  version: 1.5.0
 servers:
+  - url: https://payments.raspberry-vision.cloud
   - url: http://localhost:8080
 paths:
+  /health:
+    get:
+      summary: Process health and version
+      responses:
+        "200":
+          description: Process is up
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status, version]
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  version:
+                    type: string
+                    example: "1.5.0"
   /api/payment-methods:
     get:
       summary: List available payment methods

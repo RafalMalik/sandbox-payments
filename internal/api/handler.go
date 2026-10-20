@@ -41,6 +41,8 @@ func NewHandler(payments *payment.Service, webhooks *webhook.Sender, tmpl *templ
 // RegisterRoutes attaches all application routes to mux.
 func (h *Handler) RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /health", h.health)
+	mux.HandleFunc("GET /robots.txt", h.robots)
+	mux.HandleFunc("GET /sitemap.xml", h.sitemap)
 	mux.HandleFunc("GET /{$}", h.homePage)
 	mux.HandleFunc("GET /changelog", h.changelogPage)
 	mux.HandleFunc("GET /docs/api", h.apiDocsPage)
@@ -65,6 +67,21 @@ func (h *Handler) health(w http.ResponseWriter, _ *http.Request) {
 		"status":  "ok",
 		"version": version.Version,
 	})
+}
+
+func (h *Handler) robots(w http.ResponseWriter, _ *http.Request) {
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	_, _ = io.WriteString(w, "User-agent: *\nAllow: /\n\nSitemap: https://payments.raspberry-vision.cloud/sitemap.xml\n")
+}
+
+func (h *Handler) sitemap(w http.ResponseWriter, _ *http.Request) {
+	w.Header().Set("Content-Type", "application/xml; charset=utf-8")
+	_, _ = io.WriteString(w, `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://payments.raspberry-vision.cloud/</loc></url>
+  <url><loc>https://payments.raspberry-vision.cloud/docs/api</loc></url>
+</urlset>
+`)
 }
 
 func (h *Handler) listMethods(w http.ResponseWriter, _ *http.Request) {
