@@ -5,6 +5,12 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2026-10-20
+
+### Added
+
+- Hosted pages use the Sandbox Payments brand: `#BD1C00` tokens, source lockups, a 40px horizontal crop in the header, `favicon-32.png`, and the Open Graph image.
+
 ## [1.3.0] - 2026-10-16
 
 ### Added
@@ -37,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Home page at `/` and interactive API docs at `/docs/api` (Swagger UI)
 - OpenAPI specification at `/openapi.yaml`
 
+[1.4.0]: https://github.com/rmalik/sandbox-payments/releases/tag/v1.4.0
 [1.3.0]: https://github.com/rmalik/sandbox-payments/releases/tag/v1.3.0
 [1.2.0]: https://github.com/rmalik/sandbox-payments/releases/tag/v1.2.0
 [1.1.0]: https://github.com/rmalik/sandbox-payments/releases/tag/v1.1.0
