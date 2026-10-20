@@ -190,8 +190,9 @@ func TestHomePage_rvChrome(t *testing.T) {
 	body := rec.Body.String()
 	for _, want := range []string{
 		`data-theme="raspberry-vision"`,
-		`/static/logo.svg`,
-		`/favicon.svg`,
+		`/static/crop/horizontal.png`,
+		`/static/favicon-32.png`,
+		`/static/og/og.png`,
 		`property="og:title"`,
 		`plausible.io/js/script.js`,
 		`raspberry-vision.cloud/embed/footer-light.html?version=` + version.Version,
@@ -247,7 +248,7 @@ func TestPaymentPage_andApproveRedirect(t *testing.T) {
 	if !strings.Contains(pageBody, "PLN 25.00") {
 		t.Fatal("expected formatted amount on payment page")
 	}
-	if !strings.Contains(pageBody, `data-theme="raspberry-vision"`) || !strings.Contains(pageBody, "/static/logo.svg") {
+	if !strings.Contains(pageBody, `data-theme="raspberry-vision"`) || !strings.Contains(pageBody, "/static/crop/horizontal.png") {
 		t.Fatal("expected Raspberry Vision chrome on payment page")
 	}
 

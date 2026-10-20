@@ -1,9 +1,8 @@
 /* Page layout for Sandbox Payments. Colors and controls come from RV tokens. */
 
 .rv-brand__logo {
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: var(--rv-radius-md);
+  height: 40px;
+  width: auto;
 }
 
 .rv-public {

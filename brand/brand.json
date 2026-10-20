@@ -1,13 +1,42 @@
 {
-  "name": "Sandbox Payments",
-  "colors": {
-    "primary": "#d4125c",
-    "ink": "#17233a",
-    "accent": "#18d7f2"
+  "brand": {
+    "name": "Sandbox Payments",
+    "logo_variants": [
+      "symbol.png",
+      "square.png",
+      "horizontal.png"
+    ]
   },
-  "logo_variants": [
-    "logo.svg",
-    "logo-mark.svg",
-    "logo-dark.svg"
-  ]
+  "colors": {
+    "primary": "#BD1C00",
+    "primary_hover": "#9B1700",
+    "background": "#FFFFFF",
+    "surface": "#F3F7FC",
+    "text": "#111827",
+    "text_muted": "#5B6B7C",
+    "border": "#D6E2F0",
+    "success": "#059669",
+    "warning": "#D97706",
+    "danger": "#DC2626"
+  },
+  "typography": {
+    "font_family": "\"Source Sans 3\", sans-serif",
+    "heading": "Syne, sans-serif",
+    "body": "\"Source Sans 3\", sans-serif"
+  },
+  "radius": {
+    "sm": "2px",
+    "md": "4px",
+    "lg": "6px"
+  },
+  "spacing": {
+    "unit": 4
+  },
+  "components": {
+    "button": { "height": "48px", "radius": "4px" },
+    "input": { "height": "48px", "radius": "4px" },
+    "card": { "radius": "6px" },
+    "sidebar": { "width": "248px" },
+    "header": { "height": "72px" }
+  }
 }
