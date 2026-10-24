@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- GitHub Actions CI and deploy to the apps host (`payments-vps`): push to `main` or `workflow_dispatch` checks out the commit on the VPS, runs Compose with the VPS overlay, syncs Apache, and probes `/health`.
+- GitHub Actions CI and deploy to the apps host (`payments-vps`): push to `main` or `workflow_dispatch` calls the shared `reusable-deploy-vps` template (git checkout on the VPS, Compose, Apache sync, `/health`).
 
 ## [1.5.0] - 2026-10-20
 

@@ -1,0 +1,134 @@
+# Abstract job template: deploy a product tree on the apps VPS over SSH.
+# Checkout the commit on the host (git fetch + checkout). No rsync. No SCP of the tree.
+#
+# Copy into a product repo as .github/workflows/reusable-deploy-vps.yml
+# and call it from CI:
+#
+#   deploy:
+#     needs: test
+#     if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+#     uses: ./.github/workflows/reusable-deploy-vps.yml
+#     with:
+#       dest_path: /opt/raspberry-vision/storage
+#       repo_url: https://github.com/raspberry-vision/storage.git
+#       ref: ${{ github.sha }}
+#       compose_files: docker-compose.yml docker-compose.vps.yml
+#       health_url: http://127.0.0.1:8106/health
+#       post_script: deploy/sync-apache.sh
+#       environment: storage-vps
+#     secrets: inherit
+#
+# Same-org callers may instead use:
+#   uses: raspberry-vision/templates/.github/workflows/reusable-deploy-vps.yml@develop
+#
+# Secrets (environment on the product repo): VPS_HOST, VPS_USER, VPS_SSH_KEY.
+# Product-specific .env on the VPS is preserved (never checked out from git).
+
+name: Deploy VPS (git checkout)
+
+on:
+  workflow_call:
+    inputs:
+      dest_path:
+        description: Absolute path on the VPS (git work tree)
+        required: true
+        type: string
+      repo_url:
+        description: HTTPS git URL to clone/fetch
+        required: true
+        type: string
+      ref:
+        description: Commit SHA or ref to check out
+        required: true
+        type: string
+      compose_files:
+        description: Space-separated compose files relative to dest_path (empty = skip compose)
+        required: false
+        type: string
+        default: ""
+      systemd_unit:
+        description: systemd unit without .service (empty = skip)
+        required: false
+        type: string
+        default: ""
+      health_url:
+        description: curl URL that must succeed after deploy (empty = skip)
+        required: false
+        type: string
+        default: ""
+      post_script:
+        description: Optional script relative to dest_path (e.g. deploy/sync-apache.sh)
+        required: false
+        type: string
+        default: ""
+      environment:
+        description: GitHub environment name on the caller (holds VPS_* secrets)
+        required: true
+        type: string
+    secrets:
+      VPS_HOST:
+        required: true
+      VPS_USER:
+        required: true
+      VPS_SSH_KEY:
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - name: Pull, build, and restart on the VPS
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          command_timeout: 20m
+          script_stop: true
+          script: |
+            set -euo pipefail
+            DEST='${{ inputs.dest_path }}'
+            REPO='${{ inputs.repo_url }}'
+            REF='${{ inputs.ref }}'
+            COMPOSE_FILES='${{ inputs.compose_files }}'
+            UNIT='${{ inputs.systemd_unit }}'
+            HEALTH='${{ inputs.health_url }}'
+            POST='${{ inputs.post_script }}'
+
+            sudo mkdir -p "$(dirname "$DEST")"
+            sudo chown ubuntu:ubuntu "$(dirname "$DEST")" || true
+
+            if [[ ! -d "$DEST/.git" ]]; then
+              git clone "$REPO" "$DEST"
+            fi
+            cd "$DEST"
+            git remote set-url origin "$REPO"
+            git fetch origin
+            git checkout -f "$REF"
+
+            if [[ -n "$COMPOSE_FILES" ]]; then
+              # shellcheck disable=SC2086
+              docker compose $(printf -- '-f %s ' $COMPOSE_FILES) up -d --build
+            fi
+
+            if [[ -n "$UNIT" ]]; then
+              sudo systemctl restart "${UNIT}.service"
+              sudo systemctl is-active "${UNIT}.service"
+            fi
+
+            if [[ -n "$HEALTH" ]]; then
+              ok=0
+              for _ in $(seq 1 90); do
+                if curl -sf "$HEALTH" >/dev/null; then
+                  ok=1
+                  break
+                fi
+                sleep 2
+              done
+              test "$ok" = 1
+            fi
+
+            if [[ -n "$POST" ]]; then
+              bash "$DEST/$POST"
+            fi

@@ -28,41 +28,13 @@ jobs:
   deploy:
     needs: test
     if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
-    environment: payments-vps
-    steps:
-      - name: Pull, build, and restart on the VPS
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          command_timeout: 20m
-          script_stop: true
-          script: |
-            set -euo pipefail
-            DEST=/opt/raspberry-vision/sandbox-payments
-            sudo mkdir -p /opt/raspberry-vision
-            sudo chown ubuntu:ubuntu /opt/raspberry-vision
-            if [[ ! -d "$DEST/.git" ]]; then
-              git clone https://github.com/RafalMalik/sandbox-payments.git "$DEST"
-            fi
-            cd "$DEST"
-            if [[ ! -f .env ]]; then
-              echo "Missing $DEST/.env — create it before deploy (PORT=8117, BASE_URL=https://payments.raspberry-vision.cloud)." >&2
-              exit 1
-            fi
-            git fetch origin
-            git checkout -f "${{ github.sha }}"
-            docker compose -f docker-compose.yml -f docker-compose.vps.yml up -d --build
-            ok=0
-            for _ in $(seq 1 90); do
-              if curl -sf http://127.0.0.1:8117/health | grep -q '"status":"ok"'; then
-                ok=1
-                break
-              fi
-              sleep 2
-            done
-            test "$ok" = 1
-            bash "$DEST/deploy/sync-apache.sh"
-            curl -sf https://payments.raspberry-vision.cloud/health | grep -q '"status":"ok"'
+    uses: ./.github/workflows/reusable-deploy-vps.yml
+    with:
+      dest_path: /opt/raspberry-vision/sandbox-payments
+      repo_url: https://github.com/RafalMalik/sandbox-payments.git
+      ref: ${{ github.sha }}
+      compose_files: docker-compose.yml docker-compose.vps.yml
+      health_url: http://127.0.0.1:8117/health
+      post_script: deploy/sync-apache.sh
+      environment: payments-vps
+    secrets: inherit
