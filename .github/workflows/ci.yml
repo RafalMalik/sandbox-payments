@@ -1,0 +1,40 @@
+name: CI and deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: sandbox-payments-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+      - run: go test ./...
+      - run: go build -o bin/api ./cmd/api
+      - name: Compose
+        run: |
+          cp .env.example .env
+          docker compose -f docker-compose.yml config --quiet
+
+  deploy:
+    needs: test
+    if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch'
+    uses: ./.github/workflows/reusable-deploy-vps.yml
+    with:
+      dest_path: /opt/raspberry-vision/sandbox-payments
+      repo_url: https://github.com/raspberry-vision/sandbox-payments.git
+      ref: ${{ github.sha }}
+      compose_files: docker-compose.yml docker-compose.vps.yml
+      health_url: http://127.0.0.1:8117/health
+      post_script: deploy/sync-apache.sh
+      environment: payments-vps
+    secrets: inherit

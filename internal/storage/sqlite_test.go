@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/rmalik/sandbox-payments/internal/payment"
+	"github.com/raspberry-vision/sandbox-payments/internal/payment"
 )
 
 func openTestStore(t *testing.T) *SQLiteStore {
