@@ -13,10 +13,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/rmalik/sandbox-payments/internal/payment"
-	"github.com/rmalik/sandbox-payments/internal/storage"
-	"github.com/rmalik/sandbox-payments/internal/version"
-	"github.com/rmalik/sandbox-payments/internal/webhook"
+	"github.com/raspberry-vision/sandbox-payments/internal/payment"
+	"github.com/raspberry-vision/sandbox-payments/internal/storage"
+	"github.com/raspberry-vision/sandbox-payments/internal/version"
+	"github.com/raspberry-vision/sandbox-payments/internal/webhook"
 )
 
 func projectRoot(t *testing.T) string {

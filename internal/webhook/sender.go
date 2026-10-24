@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/rmalik/sandbox-payments/internal/payment"
+	"github.com/raspberry-vision/sandbox-payments/internal/payment"
 )
 
 const maxAttempts = 3

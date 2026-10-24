@@ -1,4 +1,4 @@
-module github.com/rmalik/sandbox-payments
+module github.com/raspberry-vision/sandbox-payments
 
 go 1.22
 
