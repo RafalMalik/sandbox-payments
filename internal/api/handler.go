@@ -14,9 +14,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/rmalik/sandbox-payments/internal/payment"
-	"github.com/rmalik/sandbox-payments/internal/version"
-	"github.com/rmalik/sandbox-payments/internal/webhook"
+	"github.com/raspberry-vision/sandbox-payments/internal/payment"
+	"github.com/raspberry-vision/sandbox-payments/internal/version"
+	"github.com/raspberry-vision/sandbox-payments/internal/webhook"
 )
 
 // Handler exposes HTTP endpoints for the sandbox payment gateway.

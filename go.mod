@@ -1,8 +1,11 @@
-module github.com/rmalik/sandbox-payments
+module github.com/raspberry-vision/sandbox-payments
 
 go 1.22
 
-require modernc.org/sqlite v1.33.1
+require (
+	github.com/raspberry-vision/sdk-go v0.3.0
+	modernc.org/sqlite v1.33.1
+)
 
 require (
 	github.com/dustin/go-humanize v1.0.1 // indirect

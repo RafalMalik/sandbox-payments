@@ -9,7 +9,7 @@ import (
 
 	_ "modernc.org/sqlite"
 
-	"github.com/rmalik/sandbox-payments/internal/payment"
+	"github.com/raspberry-vision/sandbox-payments/internal/payment"
 )
 
 // SQLiteStore implements payment.Store backed by SQLite.

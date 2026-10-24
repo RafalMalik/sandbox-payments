@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 # Build stage
 FROM golang:1.22-alpine AS builder
 
@@ -5,7 +6,14 @@ WORKDIR /src
 RUN apk add --no-cache git
 
 COPY go.mod ./
-RUN go mod download
+ENV GOPRIVATE=github.com/raspberry-vision/*
+ENV GONOSUMDB=github.com/raspberry-vision/*
+ENV GOPROXY=direct
+RUN --mount=type=ssh \
+    mkdir -p -m 0700 /root/.ssh \
+    && ssh-keyscan github.com >> /root/.ssh/known_hosts \
+    && git config --global url."git@github.com:".insteadOf "https://github.com/" \
+    && go mod download
 
 COPY . .
 RUN go mod tidy && CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o /bin/api ./cmd/api
