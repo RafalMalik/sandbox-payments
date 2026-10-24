@@ -31,33 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: payments-vps
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Stage tree
-        run: |
-          mkdir -p staging/sandbox-payments
-          rsync -a \
-            --exclude staging \
-            --exclude .git \
-            --exclude .github \
-            --exclude bin \
-            --exclude data \
-            --exclude .env \
-            ./ staging/sandbox-payments/
-
-      - name: Upload to VPS
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          source: staging/sandbox-payments
-          target: /var/tmp/rvision-incoming/
-          strip_components: 1
-          overwrite: true
-          rm: true
-
-      - name: Install tree and restart
+      - name: Pull, build, and restart on the VPS
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -67,17 +41,19 @@ jobs:
           script_stop: true
           script: |
             set -euo pipefail
-            sudo mkdir -p /opt/raspberry-vision/sandbox-payments /var/tmp/rvision-incoming
-            sudo chown -R ubuntu: /opt/raspberry-vision/sandbox-payments
-            if [[ ! -f /opt/raspberry-vision/sandbox-payments/.env ]]; then
-              echo "Missing /opt/raspberry-vision/sandbox-payments/.env — create it before deploy (PORT=8117, BASE_URL=https://payments.raspberry-vision.cloud)." >&2
+            DEST=/opt/raspberry-vision/sandbox-payments
+            sudo mkdir -p /opt/raspberry-vision
+            sudo chown ubuntu:ubuntu /opt/raspberry-vision
+            if [[ ! -d "$DEST/.git" ]]; then
+              git clone https://github.com/RafalMalik/sandbox-payments.git "$DEST"
+            fi
+            cd "$DEST"
+            if [[ ! -f .env ]]; then
+              echo "Missing $DEST/.env — create it before deploy (PORT=8117, BASE_URL=https://payments.raspberry-vision.cloud)." >&2
               exit 1
             fi
-            rsync -a --delete \
-              --exclude .env \
-              --exclude data \
-              /var/tmp/rvision-incoming/sandbox-payments/ /opt/raspberry-vision/sandbox-payments/
-            cd /opt/raspberry-vision/sandbox-payments
+            git fetch origin
+            git checkout -f "${{ github.sha }}"
             docker compose -f docker-compose.yml -f docker-compose.vps.yml up -d --build
             ok=0
             for _ in $(seq 1 90); do
@@ -88,5 +64,5 @@ jobs:
               sleep 2
             done
             test "$ok" = 1
-            bash /opt/raspberry-vision/sandbox-payments/deploy/sync-apache.sh
+            bash "$DEST/deploy/sync-apache.sh"
             curl -sf https://payments.raspberry-vision.cloud/health | grep -q '"status":"ok"'
