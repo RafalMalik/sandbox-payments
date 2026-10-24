@@ -1,0 +1,8 @@
+{
+  "token": "trk_0123456789abcdef0123456789abcdef",
+  "headers": {
+    "Authorization": "Bearer trk_0123456789abcdef0123456789abcdef",
+    "X-Api-Key": "trk_0123456789abcdef0123456789abcdef",
+    "Accept": "application/json"
+  }
+}

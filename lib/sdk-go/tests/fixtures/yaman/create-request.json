@@ -1,0 +1,5 @@
+{
+  "name": "panel-key",
+  "value": "secret-value",
+  "description": "Panel verification secret"
+}

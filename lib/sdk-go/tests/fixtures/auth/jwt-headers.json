@@ -1,0 +1,7 @@
+{
+  "token": "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJ0cmFja2VyIn0.sig",
+  "headers": {
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJ0cmFja2VyIn0.sig",
+    "Accept": "application/json"
+  }
+}

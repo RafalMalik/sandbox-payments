@@ -1,0 +1,7 @@
+{
+  "system": "deploy-target",
+  "version": "2.0.0",
+  "status": "ok",
+  "message": "Done",
+  "source": "github-actions"
+}
