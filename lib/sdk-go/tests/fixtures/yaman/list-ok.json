@@ -1,5 +1,0 @@
-{
-  "secrets": [
-    { "name": "panel-key", "permission": "manage" }
-  ]
-}

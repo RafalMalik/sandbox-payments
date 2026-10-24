@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Depend on `github.com/raspberry-vision/sdk-go` v0.3.0 (`internal/rvsdk`) for outbound Raspberry Vision HTTP calls.
+- Depend on `github.com/raspberry-vision/sdk-go` v0.3.0 (`go get`, `internal/rvsdk`) for outbound Raspberry Vision HTTP calls.
 
 ## [1.5.0] - 2026-10-20
 

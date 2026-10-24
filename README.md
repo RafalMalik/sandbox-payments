@@ -229,5 +229,5 @@ MIT
 
 ## Platform SDK
 
-This service depends on [`github.com/raspberry-vision/sdk-go`](https://github.com/raspberry-vision/sdk-go) v0.3.0. Call `rvsdk.Configure` from `internal/rvsdk`. Usage: [platform-sdk-usage.md](https://github.com/raspberry-vision/raspberry-vision/blob/develop/libs/docs/platform-sdk-usage.md).
+This service requires [`github.com/raspberry-vision/sdk-go`](https://github.com/raspberry-vision/sdk-go) v0.3.0 (`go get`). Call `rvsdk.Configure` from `internal/rvsdk`. Usage: [platform-sdk-usage.md](https://github.com/raspberry-vision/raspberry-vision/blob/develop/libs/docs/platform-sdk-usage.md).
 

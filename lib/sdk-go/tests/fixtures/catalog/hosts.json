@@ -1,7 +1,0 @@
-{
-  "policy-manager": "https://policy.raspberry-vision.cloud",
-  "dataset-builder": "https://dataset.raspberry-vision.cloud",
-  "sandbox-payments": "https://payments.raspberry-vision.cloud",
-  "todo": "https://todo.raspberry-vision.cloud",
-  "ai-center-health": "/healthz"
-}
